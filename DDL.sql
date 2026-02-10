@@ -1,12 +1,5 @@
 -- Golden Fellows - Shawn Singharaj and Andy Bui
--- phpMyAdmin SQL Dump
--- version 5.2.3-1.el9.remi
--- https://www.phpmyadmin.net/
---
--- Host: localhost
--- Generation Time: Feb 04, 2026 at 10:49 AM
--- Server version: 10.11.15-MariaDB-log
--- PHP Version: 8.4.17
+-- DDL for NBA DBMS
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET FOREIGN_KEY_CHECKS = 0;
@@ -14,22 +7,7 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `cs340_singhars`
--- 
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Games`
---
-
+-- Drop tables if they exist for easy importing
 DROP TABLE IF EXISTS Player_Game_Stats;
 DROP TABLE IF EXISTS Team_Season_Stats;
 DROP TABLE IF EXISTS Games;
@@ -37,7 +15,8 @@ DROP TABLE IF EXISTS Players;
 DROP TABLE IF EXISTS Teams;
 DROP TABLE IF EXISTS Seasons;
 
-
+-- ---------------------------------------------------------
+-- Table structure for table `Games` that displays the score with the home and away team w/ date
 CREATE TABLE `Games` (
   `gameId` int(11) NOT NULL,
   `gameDate` date NOT NULL,
@@ -47,13 +26,10 @@ CREATE TABLE `Games` (
   `awayScore` int(11) NOT NULL,
   `seasonId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- ---------------------------------------------------------
 
--- --------------------------------------------------------
-
---
--- Table structure for table `Players`
---
-
+-- ---------------------------------------------------------
+-- Table structure for table `Players` which holds a single player's name and team
 CREATE TABLE `Players` (
   `playerId` int(11) NOT NULL,
   `teamId` int(11) NULL,
@@ -61,13 +37,11 @@ CREATE TABLE `Players` (
   `lastName` varchar(45) NOT NULL,
   `position` varchar(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- ---------------------------------------------------------
 
--- --------------------------------------------------------
-
---
--- Table structure for table `Player_Game_Stats`
---
-
+-- ---------------------------------------------------------
+-- Table structure for table `Player_Game_Stats`, intersection table between a player and game
+-- Composite key with playerId and gameId
 CREATE TABLE `Player_Game_Stats` (
   `minutes` int(11) NOT NULL,
   `points` int(11) NOT NULL,
@@ -85,39 +59,31 @@ CREATE TABLE `Player_Game_Stats` (
   `playerId` int(11) NOT NULL,
   `gameId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- ---------------------------------------------------------
 
--- --------------------------------------------------------
-
---
--- Table structure for table `Seasons`
---
-
+-- ---------------------------------------------------------
+-- Table structure for table `Seasons`, holds a season's dates
 CREATE TABLE `Seasons` (
   `seasonId` int(11) NOT NULL,
   `seasonYear` int(11) NOT NULL,
   `startDate` date NOT NULL,
   `endDate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 -- --------------------------------------------------------
 
---
--- Table structure for table `Teams`
---
-
+-- ---------------------------------------------------------
+-- Table structure for table `Teams`, holds the team's name, conference, and abbr
 CREATE TABLE `Teams` (
   `teamId` int(11) NOT NULL,
   `teamName` varchar(145) NOT NULL,
   `conference` varchar(9) NOT NULL DEFAULT '1',
   `abbreviation` varchar(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- ---------------------------------------------------------
 
--- --------------------------------------------------------
-
---
--- Table structure for table `Team_Season_Stats`
---
-
+-- ---------------------------------------------------------
+-- Table structure for table `Team_Season_Stats`, intersection table between a team and their stats on the season
+-- Composite key with teamId and seasonId
 CREATE TABLE `Team_Season_Stats` (
   `gamesPlayed` int(11) NOT NULL,
   `wins` int(11) NOT NULL,
@@ -131,13 +97,12 @@ CREATE TABLE `Team_Season_Stats` (
   `teamId` int(11) NOT NULL,
   `seasonId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- ---------------------------------------------------------
 
---
--- Indexes for dumped tables
---
---
--- Indexes for table `Games`
---
+-- ---------------------------------------------------------
+-- Primary key and foreign key constraints for each table:
+
+-- 1 PK and 3 FK for Games
 ALTER TABLE `Games`
   ADD PRIMARY KEY (`gameId`),
   ADD UNIQUE KEY `gameId_UNIQUE` (`gameId`),
@@ -145,80 +110,54 @@ ALTER TABLE `Games`
   ADD KEY `fk_game_home` (`homeTeamId`),
   ADD KEY `fk_game_away` (`awayTeamId`);
 
---
--- Indexes for table `Players`
---
+-- 1 PK and 1 FK for Players
 ALTER TABLE `Players`
   ADD PRIMARY KEY (`playerId`),
   ADD UNIQUE KEY `playerId_UNIQUE` (`playerId`),
   ADD KEY `fk_player_team` (`teamId`);
 
---
--- Indexes for table `Player_Game_Stats`
---
+-- Composite key for the two FK for Player_Game_Stats
 ALTER TABLE `Player_Game_Stats`
   ADD PRIMARY KEY (`playerId`,`gameId`),
   ADD KEY `fk_player_stats_player` (`playerId`),
   ADD KEY `fk_player_stats_game` (`gameId`);
 
---
--- Indexes for table `Seasons`
---
+-- 1 PK for Seasons
 ALTER TABLE `Seasons`
   ADD PRIMARY KEY (`seasonId`),
   ADD UNIQUE KEY `seasonId_UNIQUE` (`seasonId`);
 
---
--- Indexes for table `Teams`
---
+-- 1 PK for Teams
 ALTER TABLE `Teams`
   ADD PRIMARY KEY (`teamId`),
   ADD UNIQUE KEY `teamName_UNIQUE` (`teamName`),
   ADD UNIQUE KEY `teamId_UNIQUE` (`teamId`);
 
---
--- Indexes for table `Team_Season_Stats`
---
+-- Composite key for the two FK for Team_Season_Stats
 ALTER TABLE `Team_Season_Stats`
   ADD PRIMARY KEY (`teamId`,`seasonId`),
   ADD KEY `fk_team_id` (`teamId`),
   ADD KEY `fk_team_season` (`seasonId`);
 
---
--- AUTO_INCREMENT for dumped tables
---
+-- ---------------------------------------------------------
 
---
--- AUTO_INCREMENT for table `Games`
---
+-- Set AI for the PKs
 ALTER TABLE `Games`
   MODIFY `gameId` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `Players`
---
 ALTER TABLE `Players`
   MODIFY `playerId` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `Seasons`
---
 ALTER TABLE `Seasons`
   MODIFY `seasonId` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `Teams`
---
 ALTER TABLE `Teams`
   MODIFY `teamId` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- Constraints for dumped tables
---
+-- ---------------------------------------------------------
 
---
--- Constraints for table `Games`
---
+-- FK Constraints here + Cascade
+-- Constraints for Games
 ALTER TABLE `Games`
   ADD CONSTRAINT `fk_game_away` FOREIGN KEY (`awayTeamId`) REFERENCES `Teams` (`teamId`)
   ON DELETE CASCADE
@@ -230,17 +169,15 @@ ALTER TABLE `Games`
   ON DELETE CASCADE
   ON UPDATE CASCADE;
 
---
--- Constraints for table `Players`
---
+
+-- Constraints Players
 ALTER TABLE `Players`
   ADD CONSTRAINT `fk_player_team` FOREIGN KEY (`teamId`) REFERENCES `Teams` (`teamId`)
   ON DELETE CASCADE
   ON UPDATE CASCADE;
 
---
--- Constraints for table `Player_Game_Stats`
---
+
+-- Constraints for Player_Game_Stats
 ALTER TABLE `Player_Game_Stats`
   ADD CONSTRAINT `fk_player_stats_game` FOREIGN KEY (`gameId`) REFERENCES `Games` (`gameId`)
   ON DELETE CASCADE
@@ -249,9 +186,8 @@ ALTER TABLE `Player_Game_Stats`
   ON DELETE CASCADE
   ON UPDATE CASCADE;
 
---
--- Constraints for table `Team_Season_Stats`
---
+
+-- Constraints for Team_Season_Stats
 ALTER TABLE `Team_Season_Stats`
   ADD CONSTRAINT `fk_team_id` FOREIGN KEY (`teamId`) REFERENCES `Teams` (`teamId`)
   ON DELETE CASCADE
@@ -260,29 +196,38 @@ ALTER TABLE `Team_Season_Stats`
   ON DELETE CASCADE
   ON UPDATE CASCADE;
 
+
+-- ---------------------------------------------------------
+
 -- Insert queries here
+
+-- Insert 4 teams
 INSERT INTO Teams (teamName, conference, abbreviation)
 VALUES ("Los Angeles Lakers", "West", "LAL"), 
 ("Golden State Warriors", "West", "GSW"),
 ("Portland Trail Blazers", "West", "POR"),
 ("Boston Celtics", "East", "BOS");
 
+-- Insert 4 players who are each on the 4 teams above
 INSERT INTO Players (teamId, firstName, lastName, position)
 VALUES ((SELECT teamId FROM Teams WHERE abbreviation = "LAL"), "LeBron", "James", "SF"),
 ((SELECT teamId FROM Teams WHERE abbreviation = "GSW"), "Stephen", "Curry", "PG"),
 ((SELECT teamId FROM Teams WHERE abbreviation = "POR"), "Jrue", "Holiday", "G"),
 ((SELECT teamId FROM Teams WHERE abbreviation = "BOS"), "Derrick", "White", "SG");
 
+-- Insert 2 seasons
 INSERT INTO Seasons (seasonYear, startDate, endDate)
 VALUES (2023, "2023-10-01", "2024-06-01"),
 (2024, "2024-6-01", "2025-06-01");
 
+-- Insert 4 games with the 4 teams 
 INSERT INTO Games (gameDate, seasonId, homeTeamId, awayTeamId, homeScore, awayScore)
 VALUES ("2023-05-02", (SELECT seasonId  FROM Seasons WHERE seasonYear = 2023), (SELECT teamId FROM Teams WHERE abbreviation = "LAL"), (SELECT teamId FROM Teams where abbreviation = "GSW"), 117, 112),
 ("2023-12-28", (SELECT seasonId FROM Seasons WHERE seasonYear = 2023), (SELECT teamId FROM Teams WHERE abbreviation = "POR"), (SELECT teamId FROM Teams WHERE abbreviation = "BOS"), 114, 108),
 ("2023-12-30", (SELECT seasonId FROM Seasons WHERE seasonYear = 2023), (SELECT teamId FROM Teams WHERE abbreviation = "GSW"), (SELECT teamId FROM Teams WHERE abbreviation = "POR"), 118, 112),
 ("2025-09-02", (SELECT seasonId FROM Seasons WHERE seasonYear = 2024), (SELECT teamId FROM Teams WHERE abbreviation = "LAL"), (SELECT teamId FROM Teams WHERE abbreviation = "GSW"), 108, 122);
 
+-- Insert box scores for the 4 players
 INSERT INTO Player_Game_Stats (playerId, gameId, minutes, points, rebounds, assists, steals, blocks, turnovers,
  fgm, fga, threePm, threePa, ftm, fta)
 VALUES ((SELECT playerId FROM Players WHERE firstName = "LeBron" and lastName = "James"), (SELECT gameId FROM Games WHERE gameDate = "2023-05-02"), 40, 28, 8, 6, 2, 1, 4, 10, 20, 7, 5, 5, 6),
@@ -290,6 +235,8 @@ VALUES ((SELECT playerId FROM Players WHERE firstName = "LeBron" and lastName = 
 ((SELECT playerId FROM Players WHERE firstName = "Jrue" and lastName = "Holiday"), (SELECT gameId FROM Games WHERE gameDate = "2023-12-30"), 38, 26, 5, 3, 1, 0, 4, 9, 18, 7, 3, 3, 4),
 ((SELECT playerId FROM Players WHERE firstName = "Derrick" and lastName = "White"), (SELECT gameId FROM Games WHERE gameDate = "2025-09-02"), 35, 22, 10, 3, 1, 2, 3, 8, 17, 5, 4, 4, 5);
 
+
+-- Insert each team's stats on the 2023 season
 INSERT INTO Team_Season_Stats
 (teamId, seasonId, gamesPlayed, wins, losses, pointsFor, pointsAgainst,
  assistsFor, reboundsFor, threePm, threePa)
@@ -302,7 +249,3 @@ VALUES
 
 SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
