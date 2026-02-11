@@ -155,7 +155,202 @@ app.delete('/players/:id', async (req, res) => {
 
 // ####################################################################################FOR TEAMS TABLE##############
 
+app.get('/Teams', async (req, res) => {
+  try {
+    const query = `
+      SELECT teamId, teamName, conference, abbreviation
+      FROM Teams
+      ORDER BY teamId;
+    `;
+    const [rows] = await db.query(query);
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("GET /teams error:", error);
+    res.status(500).send("Error fetching teams.");
+  }
+});
 
+
+app.post('/Teams', async (req, res) => {
+  try {
+    const { teamName, conference, abbreviation } = req.body;
+
+    // basic validation
+    if (!teamName || !conference || !abbreviation) {
+      return res.status(400).send("teamName, conference, and abbreviation are required.");
+    }
+
+
+    const query = `
+      INSERT INTO Teams (teamName, conference, abbreviation)
+      VALUES (?, ?, ?);
+    `;
+
+    const [result] = await db.query(query, [
+      teamName,
+      conference,
+      abbreviation
+    ]);
+
+    // Return the new id (handy for debugging)
+    res.status(201).json({ insertedId: result.insertId });
+  } catch (error) {
+    console.error("POST /Teams error:", error);
+    res.status(500).send("Error creating team.");
+  }
+});
+
+
+
+// ##################################################################################################
+
+
+
+
+// ####################################################################################FOR GAMES TABLE##############
+
+app.get('/Games', async (req, res) => {
+  try {
+    const query = `
+      SELECT gameId, gameDate, seasonId, homeTeamId, awayTeamId, homeScore, awayScore
+      FROM Games
+      ORDER BY gameId;
+    `;
+    const [rows] = await db.query(query);
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("GET /Games error:", error);
+    res.status(500).send("Error fetching games.");
+  }
+});
+
+app.post('/Games', async (req, res) => {
+  try {
+    const { gameDate, seasonId, homeTeamId, awayTeamId, homeScore, awayScore } = req.body;
+
+    // basic validation
+    if (!gameDate || !seasonId || !homeTeamId || !awayTeamId || homeScore === undefined || awayScore === undefined) {
+      return res.status(400).send("gameDate, seasonId, homeTeamId, awayTeamId, homeScore, and awayScore are required.");
+    }
+
+    const query = `
+      INSERT INTO Games (gameDate, seasonId, homeTeamId, awayTeamId, homeScore, awayScore)
+      VALUES (?, ?, ?, ?, ?, ?);
+    `;
+
+    const [result] = await db.query(query, [
+      gameDate,
+      seasonId,
+      homeTeamId,
+      awayTeamId,
+      homeScore,
+      awayScore
+    ]);
+
+    // Return the new id (handy for debugging)
+    res.status(201).json({ insertedId: result.insertId });
+  } catch (error) {
+    console.error("POST /Games error:", error);
+    res.status(500).send("Error creating game.");
+  }
+});
+// ##################################################################################################
+
+
+
+// ####################################################################################FOR SEASONS TABLE##############
+
+app.get('/Seasons', async (req, res) => {
+  try {
+    const query = `
+      SELECT seasonId, seasonYear, startDate, endDate
+      FROM Seasons
+      ORDER BY seasonId;
+    `;
+    const [rows] = await db.query(query);
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("GET /Seasons error:", error);
+    res.status(500).send("Error fetching seasons.");
+  }
+});
+
+app.post('/Seasons', async (req, res) => {
+  try {
+    const { seasonYear, startDate, endDate } = req.body;
+
+    // basic validation
+    if (!seasonYear || !startDate || !endDate) {
+      return res.status(400).send("seasonYear, startDate, and endDate are required.");
+    }
+
+    const query = `
+      INSERT INTO Seasons (seasonYear, startDate, endDate)
+      VALUES (?, ?, ?);
+    `;
+
+    const [result] = await db.query(query, [
+      seasonYear,
+      startDate,
+      endDate
+    ]);
+
+    // Return the new id (handy for debugging)
+    res.status(201).json({ insertedId: result.insertId });
+  } catch (error) {
+    console.error("POST /Seasons error:", error);
+    res.status(500).send("Error creating season.");
+  }
+});
+
+
+// ##################################################################################################
+
+
+
+
+
+
+
+
+// ####################################################################################FOR PLAYER_GAME_STATS TABLE##############
+app.get('/Player_Game_Stats', async (req, res) => {
+  try {
+  const query = `
+    SELECT minutes, points, rebounds, assists, steals, blocks, turnovers, fgm, fga, threePm, threePa, ftm, fta, playerId, gameId
+    FROM Player_Game_Stats
+    ORDER BY playerId;
+  `;
+    const [rows] = await db.query(query);
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("GET /Player_Game_Stats error:", error);
+    res.status(500).send("Error fetching player game stats.");
+  }
+});
+
+
+// ##################################################################################################
+
+
+
+
+// ####################################################################################FOR TEAM_SEASON_STATS TABLE##############
+app.get('/Team_Season_Stats', async (req, res) => {
+  try {
+    const query = `
+      SELECT teamId, seasonId, wins, losses, pointsFor, pointsAgainst, assistsFor, reboundsFor, threePm, threePa
+      FROM Team_Season_Stats
+      ORDER BY teamId;
+
+    `;
+    const [rows] = await db.query(query);
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("GET /Team_Season_Stats error:", error);
+    res.status(500).send("Error fetching team season stats.");
+  }
+});
 
 
 // ##################################################################################################

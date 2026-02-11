@@ -1,9 +1,9 @@
 function Home() {
     return (
         <>
-            <h1>Home page</h1>
+            <h1>NBA Games & Stats Management System</h1>
             <div className="homepageDescription">
-                <p>Developer information and Project overview here.</p>
+                <p>By: Shawn Singharaj & Andy Bui</p>
             </div>
         </>
     )
