@@ -43,10 +43,40 @@ export default function Team_Season_Stats({ backendURL }) {
               <td>{s.reboundsFor}</td>
               <td>{s.threePm}</td>
               <td>{s.threePa}</td>
+              <td>
+                <button type="button" onClick={() => alert("Edit not implemented yet")}>
+                  Edit
+                </button>
+                <button type="button" onClick={() => alert("Delete not implemented yet")}>
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+
+      <h3>Add Team_Season_Stats</h3>
+
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        alert("Add Team_Season_Stats not implemented yet");
+      }}>
+        <input type="text" placeholder="teamId Name" required />
+        <input type="text" placeholder="seasonId" required />
+        <input type="text" placeholder="wins" required />
+        <input type="text" placeholder="losses" required />
+        <input type="text" placeholder="pointsFor" required />
+        <input type="text" placeholder="pointsAgainst" required />
+        <input type="text" placeholder="assistsFor" required />
+        <input type="text" placeholder="reboundsFor" required />
+        <input type="text" placeholder="threePm" required />
+        <input type="text" placeholder="threePa" required />
+        <button type="submit">Add</button>
+      </form>
+
+
     </div>
   );
 }

@@ -33,10 +33,33 @@ export default function Teams({ backendURL }) {
               <td>{t.teamName}</td>
               <td>{t.conference}</td>
               <td>{t.abbreviation}</td>
+              <td>
+                <button type="button" onClick={() => alert("Edit not implemented yet")}>
+                  Edit
+                </button>
+                <button type="button" onClick={() => alert("Delete not implemented yet")}>
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+
+      <h3>Add Team</h3>
+
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        alert("Add Team not implemented yet");
+      }}>
+        <input type="text" placeholder="Team Name" required />
+        <input type="text" placeholder="Conference" required />
+        <input type="text" placeholder="Abbreviation" required />
+        <button type="submit">Add</button>
+      </form>
+
+      
     </div>
   );
 }

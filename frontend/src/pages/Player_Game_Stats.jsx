@@ -51,10 +51,46 @@ export default function Player_Game_Stats({ backendURL }) {
               <td>{s.threePa}</td>
               <td>{s.ftm}</td>
               <td>{s.fta}</td>
+              <td>
+                <button type="button" onClick={() => alert("Edit not implemented yet")}>
+                  Edit
+                </button>
+                <button type="button" onClick={() => alert("Delete not implemented yet")}>
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+
+
+
+      <h3>Add Player_Game_Stats</h3>
+
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        alert("Add Games not implemented yet");
+      }}>
+        <input type="text" placeholder="playerId" required />
+        <input type="text" placeholder="gameId" required />
+        <input type="text" placeholder="points" required />
+        <input type="text" placeholder="awayTeamId" required />
+        <input type="text" placeholder="assists" required />
+        <input type="text" placeholder="steals" required />
+        <input type="text" placeholder="blocks" required />
+        <input type="text" placeholder="turnovers" required />
+        <input type="text" placeholder="fgm" required />
+        <input type="text" placeholder="fga" required />
+        <input type="text" placeholder="threePm" required />
+        <input type="text" placeholder="threePa" required />
+        <input type="text" placeholder="ftm" required />
+        <input type="text" placeholder="fta" required />
+        <button type="submit">Add</button>
+      </form>
+
+
     </div>
   );
 }

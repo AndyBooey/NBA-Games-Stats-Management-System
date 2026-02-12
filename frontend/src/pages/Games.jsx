@@ -37,10 +37,35 @@ export default function Games({ backendURL }) {
               <td>{g.awayTeamId}</td>
               <td>{g.homeScore}</td>
               <td>{g.awayScore}</td>
+              <td>
+                <button type="button" onClick={() => alert("Edit not implemented yet")}>
+                  Edit
+                </button>
+                <button type="button" onClick={() => alert("Delete not implemented yet")}>
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <h3>Add Games</h3>
+
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        alert("Add Games not implemented yet");
+      }}>
+        <input type="text" placeholder="gameDate" required />
+        <input type="text" placeholder="seasonId" required />
+        <input type="text" placeholder="homeTeamId" required />
+        <input type="text" placeholder="awayTeamId" required />
+        <input type="text" placeholder="homeScore" required />
+        <input type="text" placeholder="awayScore" required />
+        <button type="submit">Add</button>
+      </form>
+
+
     </div>
   );
 }
