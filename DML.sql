@@ -3,6 +3,63 @@
 
 -- CRUD Functionality for the NBA DBMS
 
+-- Retrieve player info
+ SELECT playerId, firstName, lastName, position, teamId
+      FROM Players
+      ORDER BY playerId;
+
+-- Add player to DB
+INSERT INTO Players (firstName, lastName, position, teamId)
+VALUES (@firstName, @lastName, @position, @teamId);
+
+-- Update Player
+UPDATE Players
+      SET firstName = @firstName, lastName = @lastName, position = @position, teamId = @teamId
+      WHERE playerId = @playerId;
+
+-- Delete player
+DELETE FROM Players
+      WHERE playerId = ?;
+
+-- Retrive info for teams
+ SELECT teamId, teamName, conference, abbreviation
+      FROM Teams
+      ORDER BY teamId;
+
+-- Insert team
+INSERT INTO Teams (teamName, conference, abbreviation)
+      VALUES (@teamName, @conferece, @abbreviation);
+
+--Get games
+SELECT gameId, gameDate, seasonId, homeTeamId, awayTeamId, homeScore, awayScore
+      FROM Games
+      ORDER BY gameId;
+
+-- Add game to DB
+INSERT INTO Games (gameDate, homeTeamId, awayTeamId, homeScore, awayScore, seasonId)
+VALUES (@gameDate, @homeTeamId, @awayTeamId, @homeScore, @awayScore, @seasonId);
+
+-- Get seasons
+ SELECT seasonId, seasonYear, startDate, endDate
+      FROM Seasons
+      ORDER BY seasonId;
+
+-- Add season
+INSERT INTO Seasons (seasonYear, startDate, endDate)
+      VALUES (@seasonYear, @startDate, @endDate);
+
+-- Get player stats
+SELECT minutes, points, rebounds, assists, steals, blocks, turnovers, fgm, fga, threePm, threePa, ftm, fta, playerId, gameId
+    FROM Player_Game_Stats
+    ORDER BY playerId;
+
+-- Get team stats
+ SELECT teamId, seasonId, wins, losses, pointsFor, pointsAgainst, assistsFor, reboundsFor, threePm, threePa
+      FROM Team_Season_Stats
+      ORDER BY teamId;
+
+-- USE CASES FOR JOINS, NOT IMPLEMENTED:
+
 -- Retrieve Game Scores + Team Names + Date
 SELECT 
     ht.abbreviation AS Home,
@@ -14,7 +71,7 @@ FROM Games g
     JOIN Teams ht ON ht.teamId = g.homeTeamId
     JOIN Teams at ON at.teamId = g.awayTeamId;
 
--- Retrieve Player Box Score
+-- Retrieve Player Game stats
 SELECT 
     CONCAT(p.firstName, ' ', p.lastName) AS name,
     g.minutes,
@@ -42,12 +99,6 @@ SELECT
 FROM Players p
     JOIN Teams t ON t.teamId = p.teamId;
 
--- Retrieve Season start date, to compare to a date to determine which season it is in
-SELECT sesasonYear, startDate FROM Seasons;
-
--- Retrieve Team info
-SELECT * FROM Teams;
-
 -- Retrieve Teams' Season Stats
 SELECT 
     t.teamName,
@@ -64,23 +115,6 @@ SELECT
 FROM Seasons s
     JOIN Team_Season_Stats ts ON ts.seasonId = s.seasonId 
     JOIN Teams t ON t.teamId = ts.teamId;
-
-
--- Add player to DB
-INSERT INTO Players (teamId, firstName, lastName, position)
-VALUES (@teamId, @firstName, @lastName, @position);
-
--- Add game to DB
-INSERT INTO Games (gameDate, homeTeamId, awayTeamId, homeScore, awayScore, seasonId)
-VALUES (@gameDate, @homeTeamId, @awayTeamId, @homeScore, @awayScore, @seasonId);
-
--- Add new team to DB
-INSERT INTO Teams (teamName, abbreviation, city)
-VALUES (@teamName, @abbreviation, @city);
-
--- Add new season to DB
-INSERT INTO Seasons (seasonYear, startDate, endDate)
-VALUES (@seasonYear, @startDate, @endDate);
 
 -- Update a player when he gets waived to free agency
 UPDATE Players
