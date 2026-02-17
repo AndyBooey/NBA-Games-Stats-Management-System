@@ -18,13 +18,13 @@ export default function Games({ backendURL }) {
       <table border="1">
         <thead>
           <tr>
-            <th>gameId</th>
-            <th>gameDate</th>
-            <th>seasonId</th>
-            <th>homeTeamId</th>
-            <th>awayTeamId</th>
-            <th>homeScore</th>
-            <th>awayScore</th>
+            <th>Game Id</th>
+            <th>Game Date</th>
+            <th>Season Id</th>
+            <th>Home Team Id</th>
+            <th>Away Team Id</th>
+            <th>Home Score</th>
+            <th>Away Score</th>
           </tr>
         </thead>
         <tbody>

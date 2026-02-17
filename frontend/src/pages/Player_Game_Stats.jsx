@@ -18,20 +18,21 @@ export default function Player_Game_Stats({ backendURL }) {
       <table border="1">
         <thead>
           <tr>
-            <th>playerId</th>
-            <th>gameId</th>
-            <th>points</th>
-            <th>rebounds</th>
-            <th>assists</th>
-            <th>steals</th>
-            <th>blocks</th>
-            <th>turnovers</th>
-            <th>fgm</th>
-            <th>fga</th>
-            <th>threePm</th>
-            <th>threePa</th>
-            <th>ftm</th>
-            <th>fta</th>
+            <th>Player Id</th>
+            <th>Game Id</th>
+            <th>Minutes</th>
+            <th>Points</th>
+            <th>Rebounds</th>
+            <th>Assists</th>
+            <th>Steals</th>
+            <th>Blocks</th>
+            <th>Turnovers</th>
+            <th>Fgm</th>
+            <th>Fga</th>
+            <th>ThreePm</th>
+            <th>ThreePa</th>
+            <th>Ftm</th>
+            <th>Fta</th>
           </tr>
         </thead>
         <tbody>
@@ -39,6 +40,7 @@ export default function Player_Game_Stats({ backendURL }) {
             <tr key={index}>
               <td>{s.playerId}</td>
               <td>{s.gameId}</td>
+              <td>{s.minutes}</td>
               <td>{s.points}</td>
               <td>{s.rebounds}</td>
               <td>{s.assists}</td>
@@ -75,8 +77,9 @@ export default function Player_Game_Stats({ backendURL }) {
       }}>
         <input type="text" placeholder="playerId" required />
         <input type="text" placeholder="gameId" required />
+        <input type="text" placeholder="minutes" required />
         <input type="text" placeholder="points" required />
-        <input type="text" placeholder="awayTeamId" required />
+        <input type="text" placeholder="rebounds" required />
         <input type="text" placeholder="assists" required />
         <input type="text" placeholder="steals" required />
         <input type="text" placeholder="blocks" required />

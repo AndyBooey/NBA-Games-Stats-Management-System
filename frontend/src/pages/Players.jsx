@@ -76,12 +76,12 @@ export default function Players({ backendURL }) {
       <table border="1">
         <thead>
           <tr>
-            <th>playerId</th>
-            <th>firstName</th>
-            <th>lastName</th>
-            <th>position</th>
-            <th>teamId</th>
-            <th>actions</th>
+            <th>player Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Position</th>
+            <th>Team Id</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -106,6 +106,7 @@ export default function Players({ backendURL }) {
         <input name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
         <input name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
         <input name="position" placeholder="Position" value={formData.position} onChange={handleChange} required />
+        <input name="teamId" placeholder="Team ID" value={formData.teamId} onChange={handleChange} required />
         <button type="submit">{editingId !== null ? 'Update' : 'Add'}</button>
         {editingId !== null && (
           <button type="button" onClick={handleCancel}>Cancel</button>

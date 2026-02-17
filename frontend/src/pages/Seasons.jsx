@@ -18,10 +18,10 @@ export default function Seasons({ backendURL }) {
       <table border="1">
         <thead>
           <tr>
-            <th>seasonId</th>
-            <th>seasonYear</th>
-            <th>startDate</th>
-            <th>endDate</th>
+            <th>Season Id</th>
+            <th>Season Year</th>
+            <th>Start Date</th>
+            <th>End Date</th>
           </tr>
         </thead>
         <tbody>

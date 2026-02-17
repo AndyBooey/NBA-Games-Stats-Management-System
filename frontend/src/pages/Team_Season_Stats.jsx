@@ -18,16 +18,16 @@ export default function Team_Season_Stats({ backendURL }) {
       <table border="1">
         <thead>
           <tr>
-            <th>teamId</th>
-            <th>seasonId</th>
-            <th>wins</th>
-            <th>losses</th>
-            <th>pointsFor</th>
-            <th>pointsAgainst</th>
-            <th>assistsFor</th>
-            <th>reboundsFor</th>
-            <th>threePm</th>
-            <th>threePa</th>
+            <th>Team Id</th>
+            <th>Season Id</th>
+            <th>Wins</th>
+            <th>Losses</th>
+            <th>Points For</th>
+            <th>Points Against</th>
+            <th>Assists For</th>
+            <th>Rebounds For</th>
+            <th>ThreePm</th>
+            <th>ThreePa</th>
           </tr>
         </thead>
         <tbody>
