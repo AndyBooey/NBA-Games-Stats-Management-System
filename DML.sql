@@ -3,6 +3,7 @@
 
 -- CRUD Functionality for the NBA DBMS
 
+-- Player Table:
 -- Retrieve player info
  SELECT playerId, firstName, lastName, position, teamId
       FROM Players
@@ -19,8 +20,9 @@ UPDATE Players
 
 -- Delete player
 DELETE FROM Players
-      WHERE playerId = ?;
+      WHERE playerId = @playerId;
 
+-- Teams Table:
 -- Retrive info for teams
  SELECT teamId, teamName, conference, abbreviation
       FROM Teams
@@ -29,8 +31,18 @@ DELETE FROM Players
 -- Insert team
 INSERT INTO Teams (teamName, conference, abbreviation)
       VALUES (@teamName, @conferece, @abbreviation);
+      
+-- Update a team
+UPDATE Teams
+	SET teamName = @teamName, conference = @conference, abbreviation = @abbreviation
+    WHERE teamId = @teamId;
+    
+-- Delete a team
+DELETE FROM Teams
+	WHERE teamId = @teamId;
 
---Get games
+-- Games Table:
+-- Get games
 SELECT gameId, gameDate, seasonId, homeTeamId, awayTeamId, homeScore, awayScore
       FROM Games
       ORDER BY gameId;
@@ -39,6 +51,16 @@ SELECT gameId, gameDate, seasonId, homeTeamId, awayTeamId, homeScore, awayScore
 INSERT INTO Games (gameDate, homeTeamId, awayTeamId, homeScore, awayScore, seasonId)
 VALUES (@gameDate, @homeTeamId, @awayTeamId, @homeScore, @awayScore, @seasonId);
 
+-- Update a game
+UPDATE Games
+	SET gameDate = @gameDate, seasonId = @seasonId, homeTeamId = @homeTeamId, awayTeamId = @awayTeamId, homeScore = @homeScore, awayScore = @awayScore
+    WHERE gameId = @gameId;
+    
+-- Delete a game
+DELETE FROM Games
+	WHERE gameId = @gameId;
+
+-- Seasons Table:
 -- Get seasons
  SELECT seasonId, seasonYear, startDate, endDate
       FROM Seasons
@@ -47,18 +69,29 @@ VALUES (@gameDate, @homeTeamId, @awayTeamId, @homeScore, @awayScore, @seasonId);
 -- Add season
 INSERT INTO Seasons (seasonYear, startDate, endDate)
       VALUES (@seasonYear, @startDate, @endDate);
+      
+-- Update season
+UPDATE Seasons
+	SET seasonYear = @seasonYear, startDate = @startDate, endDate = @endDate
+    WHERE seasonId = @seasonId;
 
+-- Delete season
+DELETE FROM Seasons
+	WHERE seasonId = @seasonId;
+
+-- Player_Game_Stats Table:
 -- Get player stats
 SELECT minutes, points, rebounds, assists, steals, blocks, turnovers, fgm, fga, threePm, threePa, ftm, fta, playerId, gameId
     FROM Player_Game_Stats
     ORDER BY playerId;
 
+-- Team_Season_Stats Table:
 -- Get team stats
  SELECT teamId, seasonId, wins, losses, pointsFor, pointsAgainst, assistsFor, reboundsFor, threePm, threePa
       FROM Team_Season_Stats
       ORDER BY teamId;
 
--- USE CASES FOR JOINS, NOT IMPLEMENTED:
+-- EXAMPLE USE CASES W/ JOINS, NOT YET IMPLEMENTED:
 
 -- Retrieve Game Scores + Team Names + Date
 SELECT 
@@ -142,7 +175,7 @@ WHERE teamId = @teamId;
 DELETE FROM Player_Game_Stats
 WHERE gameId = @gameId;
 DELETE FROM Games 
-WHERE gameId = @gameId 
+WHERE gameId = @gameId;
 
 -- Delete player stats 
 DELETE FROM Player_Game_Stats
