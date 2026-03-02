@@ -14,7 +14,9 @@ import Team_Season_Stats from './pages/Team_Season_Stats';
 import Navigation from './components/Navigation';
 
 // Define the backend port and URL for API requests
-const backendPort = 4589;  // Use the port you assigned to the backend server, this would normally go in a .env file
+// Shawn - 6704
+// Andy - 4589
+const backendPort = 6704;  // Use the port you assigned to the backend server, this would normally go in a .env file
 const backendURL = `http://classwork.engr.oregonstate.edu:${backendPort}`;
 
 function App() {
@@ -22,7 +24,7 @@ function App() {
         <>
             <Navigation />
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Home backendURL={backendURL} />} />
                 <Route path="/Players" element={<Players backendURL={backendURL} />} />
                 <Route path="/Teams" element={<Teams backendURL={backendURL} />} />
                 <Route path="/Games" element={<Games backendURL={backendURL} />} />
