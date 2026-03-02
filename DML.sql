@@ -1,7 +1,7 @@
 -- Group 44: Golden Fellows
 -- Shawn Singharaj and Andy Bui
 
--- CRUD Functionality for the NBA DBMS
+-- CUD Functionality for the NBA DBMS
 
 -- Player Table:
 -- Retrieve player info
