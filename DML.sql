@@ -30,7 +30,7 @@ DELETE FROM Players
 
 -- Insert team
 INSERT INTO Teams (teamName, conference, abbreviation)
-      VALUES (@teamName, @conferece, @abbreviation);
+      VALUES (@teamName, @conference, @abbreviation);
       
 -- Update a team
 UPDATE Teams
@@ -167,8 +167,7 @@ WHERE gameId = @gameId;
 
 -- Team gets renamed
 UPDATE Teams
-SET teamName = @teamName,
-    city = @city
+SET teamName = @teamName
 WHERE teamId = @teamId;
 
 -- Delete Game + stats
