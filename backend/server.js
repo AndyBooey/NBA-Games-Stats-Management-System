@@ -13,8 +13,9 @@ const cors = require('cors');
 app.use(cors({ credentials: true, origin: "*" }));
 app.use(express.json()); // this is needed for post requests
 
-
-const PORT = 4589;
+// Shawn - 6704
+// Andy - 4589
+const PORT = 6704;
 
 // ####################################################################################FOR PLAYERS TABLE##############
 // -----------------------------
@@ -309,10 +310,6 @@ app.post('/Seasons', async (req, res) => {
 
 
 
-
-
-
-
 // ####################################################################################FOR PLAYER_GAME_STATS TABLE##############
 app.get('/Player_Game_Stats', async (req, res) => {
   try {
@@ -331,8 +328,6 @@ app.get('/Player_Game_Stats', async (req, res) => {
 
 
 // ##################################################################################################
-
-
 
 
 // ####################################################################################FOR TEAM_SEASON_STATS TABLE##############
@@ -355,7 +350,16 @@ app.get('/Team_Season_Stats', async (req, res) => {
 
 // ##################################################################################################
 
-
+// RESET BUTTON
+app.post('/Reset', async (req, res) => {
+  try {
+    await db.query('CALL sp_reset_data();');
+    res.json({message: "Database successfuly reset"});
+  } catch(error){
+    console.error("RESET error:", error);
+    res.status(500).send("Error resetting db");
+  }
+});
 
 
 // ########################################
