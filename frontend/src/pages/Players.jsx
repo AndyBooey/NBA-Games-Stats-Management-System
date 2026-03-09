@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 
 export default function Players({ backendURL }) {
   const [players, setPlayers] = useState([]);
+  const [teams, setTeams] = useState([]);
 
   //for editing players, we will need to track which player is being edited and the form data for that player
   const [editingId, setEditingId] = useState(null);
 
-  const [formData, setFormData] = useState({firstName: '', lastName: '', position: ''});
+  const [formData, setFormData] = useState({firstName: '', lastName: '', position: '', teamId: ''});
 
   const loadPlayers = async () => {   
     const res = await fetch(`${backendURL}/players`);   //fetches the players from backend to display the tables
@@ -15,6 +16,14 @@ export default function Players({ backendURL }) {
   };  
 
   useEffect(() => { loadPlayers(); }, []);  //load the players
+
+  const loadTeams = async () => {
+    const res = await fetch(`${backendURL}/teams`);
+    const data = await res.json();
+    setTeams(data);  
+  };
+
+  useEffect(() => {loadTeams(); }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -106,7 +115,15 @@ export default function Players({ backendURL }) {
         <input name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
         <input name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
         <input name="position" placeholder="Position" value={formData.position} onChange={handleChange} required />
-        <input name="teamId" placeholder="Team ID" value={formData.teamId} onChange={handleChange} required />
+        <label htmlFor="teamId">Team:</label>
+        <select name="teamId" value={formData.teamId} onChange={handleChange}>
+          <option value="">None</option>
+          {teams.map((team) => (
+            <option key={team.teamId} value={team.teamId}>
+              {team.teamName}
+            </option>
+          ))}
+        </select>
         <button type="submit">{editingId !== null ? 'Update' : 'Add'}</button>
         {editingId !== null && (
           <button type="button" onClick={handleCancel}>Cancel</button>
@@ -115,3 +132,4 @@ export default function Players({ backendURL }) {
     </div>
   );
 }
+
