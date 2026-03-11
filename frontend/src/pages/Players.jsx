@@ -36,7 +36,8 @@ export default function Players({ backendURL }) {
     setFormData({
       firstName: player.firstName,
       lastName: player.lastName,
-      position: player.position
+      position: player.position,
+      teamId: player.teamId
     });
   }
 
