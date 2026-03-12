@@ -15,13 +15,14 @@ export default function Seasons({ backendURL }) {
     <div>
       <h2>Seasons</h2>
 
-      <table border="1">
+      <table className="nba-table">
         <thead>
           <tr>
             <th>Season Id</th>
             <th>Season Year</th>
             <th>Start Date</th>
             <th>End Date</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>

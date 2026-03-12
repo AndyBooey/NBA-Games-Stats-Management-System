@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
   port: 3000,      // choose whatever port you want
-  strictPort: true // prevents Vite from auto-switching
+  strictPort: false // prevents Vite from auto-switching
   }
 })

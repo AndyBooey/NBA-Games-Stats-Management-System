@@ -17,13 +17,14 @@ export default function Teams({ backendURL }) {
     <div>
       <h2>Teams</h2>
 
-      <table border="1">
+      <table className="nba-table">
         <thead>
           <tr>
             <th>teamId</th>
             <th>teamName</th>
             <th>conference</th>
             <th>abbreviation</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -49,7 +50,7 @@ export default function Teams({ backendURL }) {
 
       <h3>Add Team</h3>
 
-      <form onSubmit={(e) => {
+      <form className="add-form" onSubmit={(e) => {
         e.preventDefault();
         alert("Add Team not implemented yet");
       }}>

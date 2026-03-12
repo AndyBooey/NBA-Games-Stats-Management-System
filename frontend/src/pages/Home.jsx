@@ -12,10 +12,11 @@ function Home({ backendURL }) {
     return (
         <>
             <h1>NBA Games & Stats Management System</h1>
-            <div className="homepageDescription">
-                <p>By: Shawn Singharaj & Andy Bui</p>
-                <h2>Reset to Original Sample Data:</h2>
-                <button onClick={onReset}>Reset</button>
+
+            <div className="homepageDescription bg-overlay">
+            <h1>Welcome to NBA Stats</h1>
+            <p className="text-accent">Track games, players, and more.</p>
+            <button onClick={onReset}>Reset</button>
             </div>
         </>
     )

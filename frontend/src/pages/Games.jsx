@@ -15,7 +15,7 @@ export default function Games({ backendURL }) {
     <div>
       <h2>Games</h2>
 
-      <table border="1">
+      <table className="nba-table">
         <thead>
           <tr>
             <th>Game Id</th>
@@ -25,6 +25,7 @@ export default function Games({ backendURL }) {
             <th>Away Team Id</th>
             <th>Home Score</th>
             <th>Away Score</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -52,7 +53,7 @@ export default function Games({ backendURL }) {
 
       <h3>Add Games</h3>
 
-      <form onSubmit={(e) => {
+      <form className="add-form" onSubmit={(e) => {
         e.preventDefault();
         alert("Add Games not implemented yet");
       }}>

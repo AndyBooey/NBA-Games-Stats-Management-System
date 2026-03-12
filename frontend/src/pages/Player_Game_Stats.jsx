@@ -15,7 +15,7 @@ export default function Player_Game_Stats({ backendURL }) {
     <div>
       <h2>Player Game Stats</h2>
 
-      <table border="1">
+      <table className="nba-table">
         <thead>
           <tr>
             <th>Player Id</th>
@@ -33,6 +33,7 @@ export default function Player_Game_Stats({ backendURL }) {
             <th>ThreePa</th>
             <th>Ftm</th>
             <th>Fta</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -71,7 +72,7 @@ export default function Player_Game_Stats({ backendURL }) {
 
       <h3>Add Player_Game_Stats</h3>
 
-      <form onSubmit={(e) => {
+      <form className="add-form" onSubmit={(e) => {
         e.preventDefault();
         alert("Add Games not implemented yet");
       }}>
