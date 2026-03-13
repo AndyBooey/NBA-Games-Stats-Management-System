@@ -13,8 +13,7 @@ const cors = require('cors');
 app.use(cors({ credentials: true, origin: "*" }));
 app.use(express.json()); // this is needed for post requests
 
-// Shawn - 6704
-// Andy - 4589
+
 const PORT = 6705;
 
 // ####################################################################################FOR PLAYERS TABLE##############
@@ -24,8 +23,9 @@ const PORT = 6705;
 app.get('/players', async (req, res) => {
   try {
     const query = `
-      SELECT playerId, firstName, lastName, position, teamId
+      SELECT Players.playerId, Players.firstName, Players.lastName, Players.position, Teams.teamName
       FROM Players
+      JOIN Teams on Players.teamId = Teams.teamId
       ORDER BY playerId;
     `;
     const [rows] = await db.query(query);
@@ -213,9 +213,22 @@ app.post('/Teams', async (req, res) => {
 app.get('/Games', async (req, res) => {
   try {
     const query = `
-      SELECT gameId, gameDate, seasonId, homeTeamId, awayTeamId, homeScore, awayScore
-      FROM Games
-      ORDER BY gameId;
+      SELECT 
+        g.gameId,
+        g.gameDate,
+        s.seasonYear,
+        home.teamName AS homeTeam,
+        away.teamName AS awayTeam,
+        g.homeScore,
+        g.awayScore
+      FROM Games g
+      JOIN Seasons s 
+        ON g.seasonId = s.seasonId
+      JOIN Teams home 
+        ON g.homeTeamId = home.teamId
+      JOIN Teams away 
+        ON g.awayTeamId = away.teamId
+      ORDER BY g.gameId;
     `;
     const [rows] = await db.query(query);
     res.status(200).json(rows);
@@ -454,8 +467,6 @@ app.delete('/Player_Game_Stats/:playerId/:gameId', async (req, res) => {
   }
 });
 
-
-
 // ##################################################################################################
 
 
@@ -463,9 +474,23 @@ app.delete('/Player_Game_Stats/:playerId/:gameId', async (req, res) => {
 app.get('/Team_Season_Stats', async (req, res) => {
   try {
     const query = `
-      SELECT teamId, seasonId, wins, losses, pointsFor, pointsAgainst, assistsFor, reboundsFor, threePm, threePa
-      FROM Team_Season_Stats
-      ORDER BY teamId;
+      SELECT 
+        t.teamName,
+        s.seasonYear,
+        tss.wins,
+        tss.losses,
+        tss.pointsFor,
+        tss.pointsAgainst,
+        tss.assistsFor,
+        tss.reboundsFor,
+        tss.threePm,
+        tss.threePa
+      FROM Team_Season_Stats tss
+      JOIN Teams t 
+        ON tss.teamId = t.teamId
+      JOIN Seasons s 
+        ON tss.seasonId = s.seasonId
+      ORDER BY t.teamName, s.seasonYear;
 
     `;
     const [rows] = await db.query(query);

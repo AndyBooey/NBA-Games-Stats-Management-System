@@ -19,7 +19,7 @@ export default function Player_Game_Stats({ backendURL }) {
   useEffect(() => { loadStats(); }, []);
 
   const loadPlayers = async () => {
-    const res = await fetch(`${backendURL}/Players`);
+    const res = await fetch(`${backendURL}/players`);
     const data = await res.json();
     setPlayers(data);
   };
