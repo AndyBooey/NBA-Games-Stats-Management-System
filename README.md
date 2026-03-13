@@ -44,6 +44,14 @@ Originality: Adapted and expanded upon the course examples
 Source:
 https://canvas.oregonstate.edu/courses/2031764/pages/exploration-implementing-cud-operations-in-your-app
 
+### Handler Files
+Some assistance from ChatGPT was used to help format and structure portions of the server-side handler logic. 
+All generated suggestions were reviewed and updated by the project authors before being integrated.
+
+### Entity Pages
+Some assistance from ChatGPT was used to help format HTML table structures for displaying entity data on the web pages. 
+The suggestions were used as a reference for layout and styling. All generated suggestions were reviewed and updated by the project authors before being integrated.
+
 ---
 
 ### Styling
