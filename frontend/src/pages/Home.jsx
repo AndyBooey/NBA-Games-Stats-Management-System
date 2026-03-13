@@ -15,8 +15,10 @@ function Home({ backendURL }) {
 
             <div className="homepageDescription bg-overlay">
             <h1>Welcome to NBA Stats</h1>
-            <p className="text-accent">Track games, players, and more.</p>
-            <button onClick={onReset}>Reset</button>
+            <h2>Shawn Singharaj and Andy Bui, Group 44</h2>
+            <p className="text-accent">Track games, players, and more.
+            </p>
+            <button onClick={onReset}>Reset DB</button>
             </div>
         </>
     )
