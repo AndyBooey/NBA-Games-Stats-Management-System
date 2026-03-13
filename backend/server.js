@@ -64,6 +64,7 @@ app.post('/players', async (req, res) => {
     const safeTeamId =
       teamId === "" || teamId === undefined ? null : teamId;
 
+    // call SP
     const query = `
       CALL add_player(?, ?, ?, ?);
     `;
@@ -83,8 +84,9 @@ app.post('/players', async (req, res) => {
   }
 });
 
-//UPDATE: Update a player
-
+// -----------------------------
+// UPDATE: Update a player
+// -----------------------------
 app.put('/players/:id', async (req, res) => {
   try {
     const playerId = Number(req.params.id);
@@ -92,15 +94,15 @@ app.put('/players/:id', async (req, res) => {
 
     //some basic validation stuff
     if(!Number.isInteger(playerId)) {
-      return res.status(400).send("Invalid player ID."); //player id needs to be an integer
+      return res.status(400).send("Invalid player ID."); // player id needs to be an integer
     }
     if (!firstName || !lastName || !position) {
-      return res.status(400).send("firstName, lastName, and position are required."); //if left blank, send error
+      return res.status(400).send("firstName, lastName, and position are required."); // if left blank, send error
     }
 
     const safeTeamId = (teamId === "" || teamId === undefined) ? null : teamId;   
 
-    //QUERY TO UPDATE A PLAYER
+    // Call SP
     const query = `     
       CALL update_player(?, ?, ?, ?, ?);
       `;
@@ -116,7 +118,7 @@ app.put('/players/:id', async (req, res) => {
     console.log('result:', JSON.stringify(result));
 
     if (result.affectedRows === 0) {
-      return res.status(404).send("Player not found."); //if no player with that id, send error
+      return res.status(404).send("Player not found."); // if no player with that id, send error
     }
     
     res.status(200).json({ message: "Player updated successfully." });
@@ -127,16 +129,18 @@ app.put('/players/:id', async (req, res) => {
 
 });
 
-
-//DELETE: Delete a player 
+// -----------------------------
+// DELETE: Delete a player
+// -----------------------------
 app.delete('/players/:id', async (req, res) => {
   try {
     const playerId = Number(req.params.id);
 
     if(!Number.isInteger(playerId)) {
-      return res.status(400).send("Invalid player ID."); //player id needs to be an integer
+      return res.status(400).send("Invalid player ID."); // player id needs to be an integer
     }
 
+    // Call SP
     const query = `
       CALL delete_player(?);
     `;
@@ -144,7 +148,7 @@ app.delete('/players/:id', async (req, res) => {
     const [result] = await db.query(query, [playerId]);
 
     if (result.affectedRows === 0) {
-      return res.status(404).send("Player not found."); //if no player with that id, send error
+      return res.status(404).send("Player not found."); // if no player with that id, send error
     }
 
     res.status(200).json({ message: "Player deleted successfully." });
@@ -190,6 +194,7 @@ app.get('/Teams', async (req, res) => {
 // -----------------------------
 app.get('/Games', async (req, res) => {
   try {
+    // Configured query to get the game date formatted without time, and team abbreviations as matchup
     const query = `
     SELECT
       g.gameId,
@@ -248,6 +253,7 @@ app.get('/Seasons', async (req, res) => {
 // -----------------------------
 app.get('/Player_Game_Stats', async (req, res) => {
   try {
+  // Configured query to get the game date formatted without time, and team abbreviations as matchup 
   const query = `
     SELECT 
       DATE_FORMAT(g.gameDate, '%Y-%m-%d') AS gameDate,
@@ -298,6 +304,7 @@ app.post('/Player_Game_Stats', async (req, res) => {
       steals, blocks, turnovers, fgm, fga, threePm, threePa, ftm, fta
     } = req.body;
 
+    // Need both FKs in request
     if (!playerId || !gameId) {
       return res.status(400).send("playerId and gameId are required.");
     }
@@ -336,6 +343,7 @@ app.put('/Player_Game_Stats/:playerId/:gameId', async (req, res) => {
       threePm, threePa, ftm, fta
     } = req.body;
 
+    // Fallback since select fields should be integers already
     if (!Number.isInteger(playerId) || !Number.isInteger(gameId)) {
       return res.status(400).send("Invalid playerId or gameId.");
     }
@@ -375,6 +383,7 @@ app.delete('/Player_Game_Stats/:playerId/:gameId', async (req, res) => {
     const playerId = Number(req.params.playerId);
     const gameId = Number(req.params.gameId);
 
+    // Need both FKs and integers
     if (!Number.isInteger(playerId) || !Number.isInteger(gameId)) {
       return res.status(400).send("Invalid playerId or gameId.");
     }
@@ -440,6 +449,7 @@ app.get('/Team_Season_Stats', async (req, res) => {
 // RESET BUTTON, calls stored function that replaces current tables and data with original sample data
 app.post('/Reset', async (req, res) => {
   try {
+    // call the SP
     await db.query('CALL sp_reset_data();');
     res.json({message: "Database successfuly reset"});
   } catch(error){
