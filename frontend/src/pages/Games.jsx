@@ -15,17 +15,16 @@ export default function Games({ backendURL }) {
     <div>
       <h2>Games</h2>
 
-      <table className="nba-table">
+      <table border="1">
         <thead>
           <tr>
-            <th>Game Id</th>
+            <th>gameId</th>
             <th>Game Date</th>
-            <th>Season Id</th>
-            <th>Home Team Id</th>
-            <th>Away Team Id</th>
+            <th>Season</th>
+            <th>Home Team</th>
+            <th>Away Team</th>
             <th>Home Score</th>
             <th>Away Score</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -33,9 +32,9 @@ export default function Games({ backendURL }) {
             <tr key={g.gameId}>
               <td>{g.gameId}</td>
               <td>{String(g.gameDate).slice(0, 10)}</td>
-              <td>{g.seasonId}</td>
-              <td>{g.homeTeamId}</td>
-              <td>{g.awayTeamId}</td>
+              <td>{g.seasonYear}</td>
+              <td>{g.homeTeam}</td>
+              <td>{g.awayTeam}</td>
               <td>{g.homeScore}</td>
               <td>{g.awayScore}</td>
               <td>
@@ -53,7 +52,7 @@ export default function Games({ backendURL }) {
 
       <h3>Add Games</h3>
 
-      <form className="add-form" onSubmit={(e) => {
+      <form onSubmit={(e) => {
         e.preventDefault();
         alert("Add Games not implemented yet");
       }}>
