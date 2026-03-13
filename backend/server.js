@@ -314,9 +314,36 @@ app.post('/Seasons', async (req, res) => {
 app.get('/Player_Game_Stats', async (req, res) => {
   try {
   const query = `
-    SELECT minutes, points, rebounds, assists, steals, blocks, turnovers, fgm, fga, threePm, threePa, ftm, fta, playerId, gameId
-    FROM Player_Game_Stats
-    ORDER BY playerId;
+    SELECT 
+      DATE_FORMAT(g.gameDate, '%Y-%m-%d') AS gameDate,
+      CONCAT(awayTeam.abbreviation, ' vs ', homeTeam.abbreviation) AS matchup,
+      pgs.minutes,
+      pgs.points,
+      pgs.rebounds,
+      pgs.assists,
+      pgs.steals,
+      pgs.blocks,
+      pgs.turnovers,
+      pgs.fgm,
+      pgs.fga,
+      pgs.threePm,
+      pgs.threePa,
+      pgs.ftm,
+      pgs.fta,
+      p.firstName,
+      p.lastName,
+      pgs.gameId,
+      pgs.playerId
+    FROM Player_Game_Stats pgs
+    JOIN Players p 
+      ON pgs.playerId = p.playerId
+    JOIN Games g 
+      ON pgs.gameId = g.gameId
+    JOIN Teams homeTeam 
+      ON g.homeTeamId = homeTeam.teamId
+    JOIN Teams awayTeam 
+      ON g.awayTeamId = awayTeam.teamId
+    ORDER BY p.lastName;
   `;
     const [rows] = await db.query(query);
     res.status(200).json(rows);
@@ -325,6 +352,108 @@ app.get('/Player_Game_Stats', async (req, res) => {
     res.status(500).send("Error fetching player game stats.");
   }
 });
+
+app.post('/Player_Game_Stats', async (req, res) => {
+  try {
+    const {
+      playerId, gameId, minutes, points, rebounds, assists,
+      steals, blocks, turnovers, fgm, fga, threePm, threePa, ftm, fta
+    } = req.body;
+
+    if (!playerId || !gameId) {
+      return res.status(400).send("playerId and gameId are required.");
+    }
+
+    const query = `
+      INSERT INTO Player_Game_Stats
+      (playerId, gameId, minutes, points, rebounds, assists,
+       steals, blocks, turnovers, fgm, fga, threePm, threePa, ftm, fta)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    `;
+
+    await db.query(query, [
+      playerId, gameId, minutes, points, rebounds, assists,
+      steals, blocks, turnovers, fgm, fga, threePm, threePa, ftm, fta
+    ]);
+
+    res.status(201).json({ message: "Player game stats added." });
+
+  } catch (error) {
+    console.error("POST /Player_Game_Stats error:", error);
+    res.status(500).send("Error creating player game stats.");
+  }
+});
+
+app.put('/Player_Game_Stats/:playerId/:gameId', async (req, res) => {
+  try {
+    const playerId = Number(req.params.playerId);
+    const gameId = Number(req.params.gameId);
+
+    const {
+      minutes, points, rebounds, assists,
+      steals, blocks, turnovers, fgm, fga,
+      threePm, threePa, ftm, fta
+    } = req.body;
+
+    if (!Number.isInteger(playerId) || !Number.isInteger(gameId)) {
+      return res.status(400).send("Invalid playerId or gameId.");
+    }
+
+    const query = `
+      UPDATE Player_Game_Stats
+      SET minutes = ?, points = ?, rebounds = ?, assists = ?,
+          steals = ?, blocks = ?, turnovers = ?,
+          fgm = ?, fga = ?, threePm = ?, threePa = ?, ftm = ?, fta = ?
+      WHERE playerId = ? AND gameId = ?;
+    `;
+
+    const [result] = await db.query(query, [
+      minutes, points, rebounds, assists,
+      steals, blocks, turnovers,
+      fgm, fga, threePm, threePa, ftm, fta,
+      playerId, gameId
+    ]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).send("Stat line not found.");
+    }
+
+    res.status(200).json({ message: "Player game stats updated." });
+
+  } catch (error) {
+    console.error("PUT /Player_Game_Stats error:", error);
+    res.status(500).send("Error updating player game stats.");
+  }
+});
+
+app.delete('/Player_Game_Stats/:playerId/:gameId', async (req, res) => {
+  try {
+    const playerId = Number(req.params.playerId);
+    const gameId = Number(req.params.gameId);
+
+    if (!Number.isInteger(playerId) || !Number.isInteger(gameId)) {
+      return res.status(400).send("Invalid playerId or gameId.");
+    }
+
+    const query = `
+      DELETE FROM Player_Game_Stats
+      WHERE playerId = ? AND gameId = ?;
+    `;
+
+    const [result] = await db.query(query, [playerId, gameId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).send("Stat line not found.");
+    }
+
+    res.status(200).json({ message: "Player game stats deleted." });
+
+  } catch (error) {
+    console.error("DELETE /Player_Game_Stats error:", error);
+    res.status(500).send("Error deleting player game stats.");
+  }
+});
+
 
 
 // ##################################################################################################
