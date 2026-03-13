@@ -31,6 +31,7 @@ export default function Players({ backendURL }) {
 
 
   //edit 
+  // ADD teamId: player.teamId
   const handleEdit = (player) => {
     setEditingId(player.playerId);
     setFormData({
@@ -83,14 +84,14 @@ export default function Players({ backendURL }) {
     <div>
       <h2>Players</h2>
 
-      <table className="nba-table">
+      <table border="1">
         <thead>
           <tr>
-            <th>player Id</th>
+            <th>playerId</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Position</th>
-            <th>Team Id</th>
+            <th>Team</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -101,7 +102,7 @@ export default function Players({ backendURL }) {
               <td>{p.firstName}</td>
               <td>{p.lastName}</td>
               <td>{p.position}</td>
-              <td>{p.teamId}</td>
+              <td>{p.teamName}</td>
               <td>
                 <button type="button" onClick={() => handleEdit(p)}>Edit</button>
                 <button type="button" onClick={() => handleDelete(p.playerId)}>Delete</button>
@@ -112,7 +113,7 @@ export default function Players({ backendURL }) {
       </table>
 
       <h3>{editingId !== null ? 'Edit Player' : 'Add Player'}</h3>
-      <form className="add-form" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <input name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
         <input name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
         <input name="position" placeholder="Position" value={formData.position} onChange={handleChange} required />
