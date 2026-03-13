@@ -1,64 +1,58 @@
 -- Group 44: Golden Fellows
 -- Shawn Singharaj and Andy Bui
 
--- CUD Functionality for the NBA DBMS
+-- CRUD Functionality for the NBA DBMS
+-- CRUD works for Players and Player_Game_Stats tables
+-- SELECTS work for all 6 tables
 
 -- Player Table:
--- Retrieve player info
- SELECT playerId, firstName, lastName, position, teamId
-      FROM Players
-      ORDER BY playerId;
+-- Retrieve player info and team name
+SELECT
+    Players.playerId,
+    Players.firstName,
+    Players.lastName,
+    Players.position,
+    Players.teamId,
+    Teams.teamName
+FROM Players
+    LEFT JOIN Teams ON Players.teamId = Teams.teamId
+ ORDER BY Players.playerId;
 
--- Add player to DB
+-- Add player
 INSERT INTO Players (firstName, lastName, position, teamId)
 VALUES (@firstName, @lastName, @position, @teamId);
 
 -- Update Player
 UPDATE Players
-      SET firstName = @firstName, lastName = @lastName, position = @position, teamId = @teamId
-      WHERE playerId = @playerId;
+    SET firstName = @firstName, lastName = @lastName, position = @position, teamId = @teamId
+    WHERE playerId = @playerId;
 
 -- Delete player
 DELETE FROM Players
-      WHERE playerId = @playerId;
+    WHERE playerId = @playerId;
 
 -- Teams Table:
 -- Retrive info for teams
  SELECT teamId, teamName, conference, abbreviation
-      FROM Teams
-      ORDER BY teamId;
-
--- Insert team
-INSERT INTO Teams (teamName, conference, abbreviation)
-      VALUES (@teamName, @conference, @abbreviation);
-      
--- Update a team
-UPDATE Teams
-	SET teamName = @teamName, conference = @conference, abbreviation = @abbreviation
-    WHERE teamId = @teamId;
-    
--- Delete a team
-DELETE FROM Teams
-	WHERE teamId = @teamId;
+    FROM Teams
+    ORDER BY teamId;
 
 -- Games Table:
--- Get games
-SELECT gameId, gameDate, seasonId, homeTeamId, awayTeamId, homeScore, awayScore
-      FROM Games
-      ORDER BY gameId;
-
--- Add game to DB
-INSERT INTO Games (gameDate, homeTeamId, awayTeamId, homeScore, awayScore, seasonId)
-VALUES (@gameDate, @homeTeamId, @awayTeamId, @homeScore, @awayScore, @seasonId);
-
--- Update a game
-UPDATE Games
-	SET gameDate = @gameDate, seasonId = @seasonId, homeTeamId = @homeTeamId, awayTeamId = @awayTeamId, homeScore = @homeScore, awayScore = @awayScore
-    WHERE gameId = @gameId;
-    
--- Delete a game
-DELETE FROM Games
-	WHERE gameId = @gameId;
+-- Get games, game date and matchup
+SELECT
+    g.gameId,
+    DATE_FORMAT(g.gameDate, '%Y-%m-%d') AS gameDate,
+    CONCAT(awayTeam.abbreviation, ' vs ', homeTeam.abbreviation) AS matchup,
+    s.seasonYear,
+    homeTeam.teamName AS homeTeam,
+    awayTeam.teamName AS awayTeam,
+    g.homeScore,
+    g.awayScore
+FROM Games g
+    JOIN Seasons s ON g.seasonId = s.seasonId
+    JOIN Teams homeTeam ON g.homeTeamId = homeTeam.teamId
+    JOIN Teams awayTeam ON g.awayTeamId = awayTeam.teamId
+    ORDER BY g.gameId;
 
 -- Seasons Table:
 -- Get seasons
@@ -66,118 +60,73 @@ DELETE FROM Games
       FROM Seasons
       ORDER BY seasonId;
 
--- Add season
-INSERT INTO Seasons (seasonYear, startDate, endDate)
-      VALUES (@seasonYear, @startDate, @endDate);
-      
--- Update season
-UPDATE Seasons
-	SET seasonYear = @seasonYear, startDate = @startDate, endDate = @endDate
-    WHERE seasonId = @seasonId;
-
--- Delete season
-DELETE FROM Seasons
-	WHERE seasonId = @seasonId;
-
 -- Player_Game_Stats Table:
--- Get player stats
-SELECT minutes, points, rebounds, assists, steals, blocks, turnovers, fgm, fga, threePm, threePa, ftm, fta, playerId, gameId
-    FROM Player_Game_Stats
-    ORDER BY playerId;
+-- Get player stats, player name and game date + matchup
+SELECT 
+      DATE_FORMAT(g.gameDate, '%Y-%m-%d') AS gameDate,
+      CONCAT(awayTeam.abbreviation, ' vs ', homeTeam.abbreviation) AS matchup,
+      pgs.minutes,
+      pgs.points,
+      pgs.rebounds,
+      pgs.assists,
+      pgs.steals,
+      pgs.blocks,
+      pgs.turnovers,
+      pgs.fgm,
+      pgs.fga,
+      pgs.threePm,
+      pgs.threePa,
+      pgs.ftm,
+      pgs.fta,
+      p.firstName,
+      p.lastName,
+      pgs.gameId,
+      pgs.playerId
+FROM Player_Game_Stats pgs
+    JOIN Players p 
+      ON pgs.playerId = p.playerId
+    JOIN Games g 
+      ON pgs.gameId = g.gameId
+    JOIN Teams homeTeam 
+      ON g.homeTeamId = homeTeam.teamId
+    JOIN Teams awayTeam 
+      ON g.awayTeamId = awayTeam.teamId
+    ORDER BY p.lastName;
+
+-- Add player stat
+INSERT INTO Player_Game_Stats
+    (playerId, gameId, minutes, points, rebounds, assists,
+       steals, blocks, turnovers, fgm, fga, threePm, threePa, ftm, fta)
+    VALUES (@playerId, @gameId, @minutes, @points, @rebounds, @assists, @steals, @blocks, @turnovers, @fgm, @fga, @threePm, @threepa, @ftm, @fta);
+
+-- Update player stat
+UPDATE Player_Game_Stats
+    SET minutes = @minutes, points = @points, rebounds = @rebounds, assists = @assists,
+        steals = @steals, blocks = @blocks, turnovers = @turnovers,
+        fgm = @fgm, fga = @fga, threePm = @threePm, threePa = @threePa, ftm = @ftm, fta = @fta
+    WHERE playerId = @playerId AND gameId = @gameId;
+
+-- Delete player stat
+DELETE FROM Player_Game_Stats
+      WHERE playerId = @gameId AND gameId = @gameId;
 
 -- Team_Season_Stats Table:
--- Get team stats
- SELECT teamId, seasonId, wins, losses, pointsFor, pointsAgainst, assistsFor, reboundsFor, threePm, threePa
-      FROM Team_Season_Stats
-      ORDER BY teamId;
-
--- EXAMPLE USE CASES W/ JOINS, NOT YET IMPLEMENTED:
-
--- Retrieve Game Scores + Team Names + Date
+-- Get team stats and season year
 SELECT 
-    ht.abbreviation AS Home,
-    g.homeScore, 
-    at.abbreviation AS Away,
-    g.awayScore, 
-    g.gameDate
-FROM Games g
-    JOIN Teams ht ON ht.teamId = g.homeTeamId
-    JOIN Teams at ON at.teamId = g.awayTeamId;
-
--- Retrieve Player Game stats
-SELECT 
-    CONCAT(p.firstName, ' ', p.lastName) AS name,
-    g.minutes,
-    g.points,
-    g.rebounds,
-    g.assists,
-    g.steals,
-    g.blocks,
-    g.turnovers,
-    g.fgm,
-    g.fga,
-    g.threePm,
-    g.threePa,
-    g.ftm,
-    g.fta
-FROM Player_Game_Stats g
-    JOIN Players p ON p.playerId = g.playerId;
-
--- Retrieve Players and team
-SELECT 
-    p.firstName,
-    p.lastName,
-    t.teamName,
-    p.position
-FROM Players p
-    JOIN Teams t ON t.teamId = p.teamId;
-
--- Retrieve Teams' Season Stats
-SELECT 
-    t.teamName,
-    s.seasonYear,
-    ts.gamesPlayed,
-    ts.wins,
-    ts.losses,
-    ts.pointsFor,
-    ts.pointsAgainst,
-    ts.assistsFor,
-    ts.reboundsFor,
-    ts.threePm,
-    ts.threePa
-FROM Seasons s
-    JOIN Team_Season_Stats ts ON ts.seasonId = s.seasonId 
-    JOIN Teams t ON t.teamId = ts.teamId;
-
--- Update a player when he gets waived to free agency
-UPDATE Players
-SET teamId = NULL 
-WHERE firstName = "input" AND lastName = "input";
-
--- Update player team when trade
-UPDATE Players
-SET teamId = @newTeamId
-WHERE playerId = @playerId;
-
--- Update game score
-UPDATE Games
-SET homeScore = @homeScore,
-    awayScore = @awayScore
-WHERE gameId = @gameId;
-
--- Team gets renamed
-UPDATE Teams
-SET teamName = @teamName
-WHERE teamId = @teamId;
-
--- Delete Game + stats
-DELETE FROM Player_Game_Stats
-WHERE gameId = @gameId;
-DELETE FROM Games 
-WHERE gameId = @gameId;
-
--- Delete player stats 
-DELETE FROM Player_Game_Stats
-WHERE playerId = @playerId AND gameId = @gameId;
-
-
+        t.teamName,
+        s.seasonYear,
+        tss.wins,
+        tss.losses,
+        tss.pointsFor,
+        tss.pointsAgainst,
+        tss.assistsFor,
+        tss.reboundsFor,
+        tss.threePm,
+        tss.threePa
+      FROM Team_Season_Stats tss
+      JOIN Teams t 
+        ON tss.teamId = t.teamId
+      JOIN Seasons s 
+        ON tss.seasonId = s.seasonId
+      ORDER BY t.teamName, s.seasonYear;
+ 
