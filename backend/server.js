@@ -213,22 +213,19 @@ app.post('/Teams', async (req, res) => {
 app.get('/Games', async (req, res) => {
   try {
     const query = `
-      SELECT 
-        g.gameId,
-        g.gameDate,
-        s.seasonYear,
-        home.teamName AS homeTeam,
-        away.teamName AS awayTeam,
-        g.homeScore,
-        g.awayScore
-      FROM Games g
-      JOIN Seasons s 
-        ON g.seasonId = s.seasonId
-      JOIN Teams home 
-        ON g.homeTeamId = home.teamId
-      JOIN Teams away 
-        ON g.awayTeamId = away.teamId
-      ORDER BY g.gameId;
+    SELECT
+      g.gameId,
+      DATE_FORMAT(g.gameDate, '%Y-%m-%d') AS gameDate,
+      CONCAT(awayTeam.abbreviation, ' vs ', homeTeam.abbreviation) AS matchup,
+      g.seasonId,
+      g.homeTeamId,
+      g.awayTeamId,
+      g.homeScore,
+      g.awayScore
+    FROM Games g
+    JOIN Teams homeTeam ON g.homeTeamId = homeTeam.teamId
+    JOIN Teams awayTeam ON g.awayTeamId = awayTeam.teamId
+    ORDER BY g.gameId;
     `;
     const [rows] = await db.query(query);
     res.status(200).json(rows);
