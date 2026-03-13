@@ -14,7 +14,7 @@ app.use(cors({ credentials: true, origin: "*" }));
 app.use(express.json()); // this is needed for post requests
 
 
-const PORT = 6766;
+const PORT = 6709;
 
 // ####################################################################################FOR PLAYERS TABLE##############
 // -----------------------------
