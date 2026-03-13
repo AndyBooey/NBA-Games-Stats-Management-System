@@ -14,7 +14,7 @@ app.use(cors({ credentials: true, origin: "*" }));
 app.use(express.json()); // this is needed for post requests
 
 
-const PORT = 6709;
+const PORT = 6766;
 
 // ####################################################################################FOR PLAYERS TABLE##############
 // -----------------------------
@@ -60,8 +60,7 @@ app.post('/players', async (req, res) => {
       teamId === "" || teamId === undefined ? null : teamId;
 
     const query = `
-      INSERT INTO Players (firstName, lastName, position, teamId)
-      VALUES (?, ?, ?, ?);
+      CALL add_player(?, ?, ?, ?);
     `;
 
     const [result] = await db.query(query, [
@@ -98,18 +97,18 @@ app.put('/players/:id', async (req, res) => {
 
     //QUERY TO UPDATE A PLAYER
     const query = `     
-      UPDATE Players
-      SET firstName = ?, lastName = ?, position = ?, teamId = ?
-      WHERE playerId = ?;
+      CALL update_player(?, ?, ?, ?, ?);
       `;
 
     const [result] = await db.query(query, [
+      playerId,
       firstName,
       lastName,
       position,
-      safeTeamId,
-      playerId
+      safeTeamId     
     ]);
+
+    console.log('result:', JSON.stringify(result));
 
     if (result.affectedRows === 0) {
       return res.status(404).send("Player not found."); //if no player with that id, send error
@@ -134,8 +133,7 @@ app.delete('/players/:id', async (req, res) => {
     }
 
     const query = `
-      DELETE FROM Players
-      WHERE playerId = ?;
+      CALL delete_player(?);
     `;
 
     const [result] = await db.query(query, [playerId]);
