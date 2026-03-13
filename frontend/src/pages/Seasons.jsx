@@ -18,7 +18,7 @@ export default function Seasons({ backendURL }) {
       <table className="nba-table">
         <thead>
           <tr>
-            <th>Season Id</th>
+            <th>seasonId</th>
             <th>Season Year</th>
             <th>Start Date</th>
             <th>End Date</th>
