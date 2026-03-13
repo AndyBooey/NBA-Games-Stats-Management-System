@@ -14,7 +14,7 @@ app.use(cors({ credentials: true, origin: "*" }));
 app.use(express.json()); // this is needed for post requests
 
 
-const PORT = 6705;
+const PORT = 6709;
 
 // ####################################################################################FOR PLAYERS TABLE##############
 // -----------------------------
@@ -217,12 +217,13 @@ app.get('/Games', async (req, res) => {
       g.gameId,
       DATE_FORMAT(g.gameDate, '%Y-%m-%d') AS gameDate,
       CONCAT(awayTeam.abbreviation, ' vs ', homeTeam.abbreviation) AS matchup,
-      g.seasonId,
-      g.homeTeamId,
-      g.awayTeamId,
+      s.seasonYear,
+      homeTeam.teamName AS homeTeam,
+      awayTeam.teamName AS awayTeam,
       g.homeScore,
       g.awayScore
     FROM Games g
+    JOIN Seasons s ON g.seasonId = s.seasonId
     JOIN Teams homeTeam ON g.homeTeamId = homeTeam.teamId
     JOIN Teams awayTeam ON g.awayTeamId = awayTeam.teamId
     ORDER BY g.gameId;
