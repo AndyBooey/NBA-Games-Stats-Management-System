@@ -84,7 +84,7 @@ export default function Players({ backendURL }) {
     <div>
       <h2>Players</h2>
 
-      <table border="1">
+      <table className="nba-table">
         <thead>
           <tr>
             <th>playerId</th>
@@ -113,7 +113,7 @@ export default function Players({ backendURL }) {
       </table>
 
       <h3>{editingId !== null ? 'Edit Player' : 'Add Player'}</h3>
-      <form onSubmit={handleSubmit}>
+      <form className="add-form" onSubmit={handleSubmit}>
         <input name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
         <input name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
         <input name="position" placeholder="Position" value={formData.position} onChange={handleChange} required />

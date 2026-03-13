@@ -15,7 +15,7 @@ export default function Team_Season_Stats({ backendURL }) {
     <div>
       <h2>Team Season Stats</h2>
 
-      <table border="1">
+      <table className="nba-table">
         <thead>
           <tr>
             <th>Team</th>
@@ -28,6 +28,7 @@ export default function Team_Season_Stats({ backendURL }) {
             <th>Rebounds For</th>
             <th>ThreePm</th>
             <th>ThreePa</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -59,7 +60,7 @@ export default function Team_Season_Stats({ backendURL }) {
 
       <h3>Add Team_Season_Stats</h3>
 
-      <form onSubmit={(e) => {
+      <form className="add-form" onSubmit={(e) => {
         e.preventDefault();
         alert("Add Team_Season_Stats not implemented yet");
       }}>
