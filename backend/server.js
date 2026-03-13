@@ -16,9 +16,14 @@ app.use(express.json()); // this is needed for post requests
 
 const PORT = 6709;
 
+// SELECTS work for all 6 tables
+// CUD works for Players and Player_Game_Stats tables
+
 // ####################################################################################FOR PLAYERS TABLE##############
+// Players Table CUD utilizes Stored Procedures to Add, Update, Delete from table.
 // -----------------------------
 // READ: Get all players TO DISPLAY TABLE IN FRONTEND
+// Uses JOIN to obtain the team's name based off the teamId
 // -----------------------------
 app.get('/players', async (req, res) => {
   try {
@@ -123,7 +128,7 @@ app.put('/players/:id', async (req, res) => {
 });
 
 
-//DELETE: Delete a player       WILL NOT WORK YET SINCE IT IS CONNECTED TO THE TEAMS TABLE, NEED TO FIGURE OUT HOW TO DELETE PLAYER WITHOUT DELETING THE TEAM THEY ARE ON, OR DELETE THE TEAM TOO, NOT SURE YET
+//DELETE: Delete a player 
 app.delete('/players/:id', async (req, res) => {
   try {
     const playerId = Number(req.params.id);
@@ -154,12 +159,11 @@ app.delete('/players/:id', async (req, res) => {
 // ##################################################################################################
 
 
-
-
-
-
 // ####################################################################################FOR TEAMS TABLE##############
 
+// -----------------------------
+// SELECT: See teams
+// -----------------------------
 app.get('/Teams', async (req, res) => {
   try {
     const query = `
@@ -175,45 +179,15 @@ app.get('/Teams', async (req, res) => {
   }
 });
 
-
-app.post('/Teams', async (req, res) => {
-  try {
-    const { teamName, conference, abbreviation } = req.body;
-
-    // basic validation
-    if (!teamName || !conference || !abbreviation) {
-      return res.status(400).send("teamName, conference, and abbreviation are required.");
-    }
-
-
-    const query = `
-      INSERT INTO Teams (teamName, conference, abbreviation)
-      VALUES (?, ?, ?);
-    `;
-
-    const [result] = await db.query(query, [
-      teamName,
-      conference,
-      abbreviation
-    ]);
-
-    // Return the new id (handy for debugging)
-    res.status(201).json({ insertedId: result.insertId });
-  } catch (error) {
-    console.error("POST /Teams error:", error);
-    res.status(500).send("Error creating team.");
-  }
-});
-
-
-
 // ##################################################################################################
-
-
 
 
 // ####################################################################################FOR GAMES TABLE##############
 
+// -----------------------------
+// SELECT: See games
+// Utilizes JOINS to get season year and team names 
+// -----------------------------
 app.get('/Games', async (req, res) => {
   try {
     const query = `
@@ -240,42 +214,14 @@ app.get('/Games', async (req, res) => {
   }
 });
 
-app.post('/Games', async (req, res) => {
-  try {
-    const { gameDate, seasonId, homeTeamId, awayTeamId, homeScore, awayScore } = req.body;
-
-    // basic validation
-    if (!gameDate || !seasonId || !homeTeamId || !awayTeamId || homeScore === undefined || awayScore === undefined) {
-      return res.status(400).send("gameDate, seasonId, homeTeamId, awayTeamId, homeScore, and awayScore are required.");
-    }
-
-    const query = `
-      INSERT INTO Games (gameDate, seasonId, homeTeamId, awayTeamId, homeScore, awayScore)
-      VALUES (?, ?, ?, ?, ?, ?);
-    `;
-
-    const [result] = await db.query(query, [
-      gameDate,
-      seasonId,
-      homeTeamId,
-      awayTeamId,
-      homeScore,
-      awayScore
-    ]);
-
-    // Return the new id (handy for debugging)
-    res.status(201).json({ insertedId: result.insertId });
-  } catch (error) {
-    console.error("POST /Games error:", error);
-    res.status(500).send("Error creating game.");
-  }
-});
 // ##################################################################################################
-
 
 
 // ####################################################################################FOR SEASONS TABLE##############
 
+// -----------------------------
+// SELECT: See seasons
+// -----------------------------
 app.get('/Seasons', async (req, res) => {
   try {
     const query = `
@@ -291,41 +237,15 @@ app.get('/Seasons', async (req, res) => {
   }
 });
 
-app.post('/Seasons', async (req, res) => {
-  try {
-    const { seasonYear, startDate, endDate } = req.body;
-
-    // basic validation
-    if (!seasonYear || !startDate || !endDate) {
-      return res.status(400).send("seasonYear, startDate, and endDate are required.");
-    }
-
-    const query = `
-      INSERT INTO Seasons (seasonYear, startDate, endDate)
-      VALUES (?, ?, ?);
-    `;
-
-    const [result] = await db.query(query, [
-      seasonYear,
-      startDate,
-      endDate
-    ]);
-
-    // Return the new id (handy for debugging)
-    res.status(201).json({ insertedId: result.insertId });
-  } catch (error) {
-    console.error("POST /Seasons error:", error);
-    res.status(500).send("Error creating season.");
-  }
-});
-
-
 // ##################################################################################################
 
 
-
-
 // ####################################################################################FOR PLAYER_GAME_STATS TABLE##############
+// M:M intersection table with CRUD implementation
+// -----------------------------
+// SELECT: See player game stats
+// Utilizes JOINS to obtain player's name, and matchup
+// -----------------------------
 app.get('/Player_Game_Stats', async (req, res) => {
   try {
   const query = `
@@ -368,6 +288,9 @@ app.get('/Player_Game_Stats', async (req, res) => {
   }
 });
 
+// -----------------------------
+// CREATE: Add a player's game stats
+// -----------------------------
 app.post('/Player_Game_Stats', async (req, res) => {
   try {
     const {
@@ -399,6 +322,9 @@ app.post('/Player_Game_Stats', async (req, res) => {
   }
 });
 
+// -----------------------------
+// UPDATE: edit a player's game stats 
+// -----------------------------
 app.put('/Player_Game_Stats/:playerId/:gameId', async (req, res) => {
   try {
     const playerId = Number(req.params.playerId);
@@ -441,6 +367,9 @@ app.put('/Player_Game_Stats/:playerId/:gameId', async (req, res) => {
   }
 });
 
+// -----------------------------
+// DELETE: delete a player's game stats from table
+// -----------------------------
 app.delete('/Player_Game_Stats/:playerId/:gameId', async (req, res) => {
   try {
     const playerId = Number(req.params.playerId);
@@ -473,6 +402,10 @@ app.delete('/Player_Game_Stats/:playerId/:gameId', async (req, res) => {
 
 
 // ####################################################################################FOR TEAM_SEASON_STATS TABLE##############
+// -----------------------------
+// SELECT: See team's season stats
+// Utilizes JOINs to get team name and season year
+// -----------------------------
 app.get('/Team_Season_Stats', async (req, res) => {
   try {
     const query = `
@@ -502,11 +435,9 @@ app.get('/Team_Season_Stats', async (req, res) => {
     res.status(500).send("Error fetching team season stats.");
   }
 });
-
-
 // ##################################################################################################
 
-// RESET BUTTON
+// RESET BUTTON, calls stored function that replaces current tables and data with original sample data
 app.post('/Reset', async (req, res) => {
   try {
     await db.query('CALL sp_reset_data();');
@@ -516,9 +447,8 @@ app.post('/Reset', async (req, res) => {
     res.status(500).send("Error resetting db");
   }
 });
-
-
 // ########################################
+
 // ########## LISTENER
 
 app.listen(PORT, function () {
