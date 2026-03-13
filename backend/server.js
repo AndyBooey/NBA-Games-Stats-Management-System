@@ -15,7 +15,7 @@ app.use(express.json()); // this is needed for post requests
 
 // Shawn - 6704
 // Andy - 4589
-const PORT = 6704;
+const PORT = 6705;
 
 // ####################################################################################FOR PLAYERS TABLE##############
 // -----------------------------

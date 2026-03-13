@@ -47,7 +47,7 @@ export default function Seasons({ backendURL }) {
 
       <h3>Add Seasons</h3>
 
-      <form onSubmit={(e) => {
+      <form className="add-form" onSubmit={(e) => {
         e.preventDefault();
         alert("Add Season not implemented yet");
       }}>

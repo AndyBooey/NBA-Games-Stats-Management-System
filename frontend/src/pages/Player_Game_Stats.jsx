@@ -102,7 +102,7 @@ export default function Player_Game_Stats({ backendURL }) {
     <div>
       <h2>Player Game Stats</h2>
 
-      <table border="1">
+      <table className="nba-table">
         <thead>
           <tr>
             <th>Player</th>
@@ -120,6 +120,7 @@ export default function Player_Game_Stats({ backendURL }) {
             <th>ThreePa</th>
             <th>Ftm</th>
             <th>Fta</th>
+            <th>action</th>
           </tr>
         </thead>
         <tbody>
@@ -155,7 +156,7 @@ export default function Player_Game_Stats({ backendURL }) {
 
 
       <h3>{editingId !== null ? 'Edit Player Game Stats' : 'Add Player Game Stats'}</h3>
-      <form onSubmit={handleSubmit}>
+      <form className="add-form"onSubmit={handleSubmit}>
       <select
           name="playerId"
           value={formData.playerId}

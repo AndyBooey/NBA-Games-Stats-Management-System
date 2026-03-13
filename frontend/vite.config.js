@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-  port: 3000,      // choose whatever port you want
+  port: 4024,      // choose whatever port you want
   strictPort: false // prevents Vite from auto-switching
   }
 })
