@@ -62,4 +62,4 @@ Source:
 https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap
 
 Description:
-The font is imported via CSS using the `@import` rule to style headings and enhance the NBA-themed visual design of the website.
+The font is imported via CSS using the `@import` rule to enhance the NBA-themed visual design. 
