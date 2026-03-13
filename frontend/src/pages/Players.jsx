@@ -38,9 +38,9 @@ export default function Players({ backendURL }) {
       firstName: player.firstName,
       lastName: player.lastName,
       position: player.position,
-      teamId: player.teamId
+      teamId: player.teamId != null ? String(player.teamId) : ''
     });
-  }
+  };
 
   //cancel edit
   const handleCancel = () => {
@@ -121,9 +121,9 @@ export default function Players({ backendURL }) {
         <select name="teamId" value={formData.teamId} onChange={handleChange}>
           <option value="">None</option>
           {teams.map((team) => (
-            <option key={team.teamId} value={team.teamId}>
-              {team.teamName}
-            </option>
+        <option key={team.teamId} value={String(team.teamId)}>
+          {team.teamName}
+        </option>
           ))}
         </select>
         <button type="submit">{editingId !== null ? 'Update' : 'Add'}</button>

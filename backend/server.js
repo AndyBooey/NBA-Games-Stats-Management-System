@@ -23,10 +23,16 @@ const PORT = 6709;
 app.get('/players', async (req, res) => {
   try {
     const query = `
-      SELECT Players.playerId, Players.firstName, Players.lastName, Players.position, Teams.teamName
-      FROM Players
-      JOIN Teams on Players.teamId = Teams.teamId
-      ORDER BY playerId;
+    SELECT
+      Players.playerId,
+      Players.firstName,
+      Players.lastName,
+      Players.position,
+      Players.teamId,
+      Teams.teamName
+    FROM Players
+    LEFT JOIN Teams ON Players.teamId = Teams.teamId
+    ORDER BY Players.playerId;
     `;
     const [rows] = await db.query(query);
     res.status(200).json(rows);
