@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 export default function Team_Season_Stats({ backendURL }) {
   const [stats, setStats] = useState([]);
 
+  // load team season stats using get request and select query
   const loadStats = async () => {
     const res = await fetch(`${backendURL}/Team_Season_Stats`);
     const data = await res.json();
@@ -11,6 +12,8 @@ export default function Team_Season_Stats({ backendURL }) {
 
   useEffect(() => { loadStats(); }, []);
 
+  // map all team season statistics in DB onto the table dynamically, along with the season year
+  // CUD doesnt work
   return (
     <div>
       <h2>Team Season Stats</h2>

@@ -7,6 +7,7 @@ export default function Players({ backendURL }) {
   //for editing players, we will need to track which player is being edited and the form data for that player
   const [editingId, setEditingId] = useState(null);
 
+  // formdata includes current team for dynamic dropdown
   const [formData, setFormData] = useState({firstName: '', lastName: '', position: '', teamId: ''});
 
   const loadPlayers = async () => {   
@@ -17,6 +18,7 @@ export default function Players({ backendURL }) {
 
   useEffect(() => { loadPlayers(); }, []);  //load the players
 
+  // fetch teams in the same way
   const loadTeams = async () => {
     const res = await fetch(`${backendURL}/teams`);
     const data = await res.json();
@@ -31,7 +33,6 @@ export default function Players({ backendURL }) {
 
 
   //edit 
-  // ADD teamId: player.teamId
   const handleEdit = (player) => {
     setEditingId(player.playerId);
     setFormData({
@@ -80,6 +81,10 @@ export default function Players({ backendURL }) {
     loadPlayers();
   };
 
+  // map all players from the select query and utilizing the team name
+  // dynamic select dropdown menu from loadTeams for when adding/editing a player
+  // select automatically fills out for player's current team when editing using formdata
+  // Add, Edit, Delete buttons functional
   return (
     <div>
       <h2>Players</h2>

@@ -3,16 +3,17 @@ import React, { useEffect, useState } from 'react';
 export default function Teams({ backendURL }) {
   const [teams, setTeams] = useState([]);
 
+  // fetch teams with get request and select query
   const loadTeams = async () => {
     const res = await fetch(`${backendURL}/Teams`);
     const data = await res.json();
     setTeams(data);
   };
 
-  
-
   useEffect(() => { loadTeams(); }, []);
 
+  // map all teams in DB onto the table dynamically
+  // CUD doesnt work
   return (
     <div>
       <h2>Teams</h2>

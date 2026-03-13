@@ -4,12 +4,15 @@ export default function Player_Game_Stats({ backendURL }) {
   const [stats, setStats] = useState([]);
   const [players, setPlayers] = useState([]);
   const [games, setGames] = useState([]);
+  // set state to Player_Game_Stats, Players (for name), Games (for matchup) tables
 
   const [editingId, setEditingId] = useState(null);
 
+  // set form data to be populated by player stat data
   const [formData, setFormData] = useState({playerId: '', gameId: '', minutes: '', points: '', rebounds: '', assists: '', 
     steals: '', blocks: '', turnovers: '', fgm: '', fga: '', threePm: '', threePa: '', ftm: '', fta: ''});
 
+  // load player stats with get request and select query
   const loadStats = async () => {
     const res = await fetch(`${backendURL}/Player_Game_Stats`);
     const data = await res.json();
@@ -18,6 +21,7 @@ export default function Player_Game_Stats({ backendURL }) {
 
   useEffect(() => { loadStats(); }, []);
 
+  // load player list with get request and select query for dropdown select
   const loadPlayers = async () => {
     const res = await fetch(`${backendURL}/players`);
     const data = await res.json();
@@ -26,6 +30,7 @@ export default function Player_Game_Stats({ backendURL }) {
 
   useEffect(() => { loadPlayers(); }, []);
 
+  // load games list with get request and select query for dropdown select
   const loadGames = async () => {
     const res = await fetch(`${backendURL}/Games`);
     const data = await res.json();
@@ -38,6 +43,8 @@ export default function Player_Game_Stats({ backendURL }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
+  // set form data so when editing, the row's data will be populated in the input fields
+  // edit 
   const handleEdit = (pgs) => {
     setEditingId({playerId: pgs.playerId, 
       gameId: pgs.gameId});
@@ -50,6 +57,7 @@ export default function Player_Game_Stats({ backendURL }) {
     });
   }
 
+  // cancel edit
   const handleCancel = () => {
     setEditingId(null);
     setFormData({
@@ -59,6 +67,7 @@ export default function Player_Game_Stats({ backendURL }) {
     });
   }
 
+  // delete request using the two FK
   const handleDelete = async (playerId, gameId) => {
     if (!window.confirm("Delete this stat line?")) return;
 
@@ -75,6 +84,7 @@ export default function Player_Game_Stats({ backendURL }) {
     loadStats();
   };
 
+  // when editing or adding something
   const handleSubmit = async (e) => {
       e.preventDefault();
 
@@ -98,6 +108,11 @@ export default function Player_Game_Stats({ backendURL }) {
       loadStats();
     }
 
+  // map all stats from the select query and utilizing the player's name and gamedate and matchup
+  // two dynamic select dropdown menus from loadPlayers and loadGames for when adding/editing a statline 
+  // select automatically fills out for player's current team when editing using formdata
+  // the rest of the input fields are integer inputs
+  // Add, Edit, Delete buttons functional
   return (
     <div>
       <h2>Player Game Stats</h2>

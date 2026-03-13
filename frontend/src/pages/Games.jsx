@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 export default function Games({ backendURL }) {
   const [games, setGames] = useState([]);
 
+  // load games from db by calling a get request and select query
   const loadGames = async () => {
     const res = await fetch(`${backendURL}/games`);
     const data = await res.json();
@@ -11,6 +12,8 @@ export default function Games({ backendURL }) {
 
   useEffect(() => { loadGames(); }, []);
 
+  // map all games in DB onto the table dynamically, and formatting the date so it doesn't have the time
+  // CUD doesnt work
   return (
     <div>
       <h2>Games</h2>

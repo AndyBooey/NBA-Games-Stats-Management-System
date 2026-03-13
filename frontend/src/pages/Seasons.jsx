@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 export default function Seasons({ backendURL }) {
   const [seasons, setSeasons] = useState([]);
 
+  // Fetch and load seasons 
   const loadSeasons = async () => {
     const res = await fetch(`${backendURL}/seasons`);
     const data = await res.json();
@@ -11,6 +12,8 @@ export default function Seasons({ backendURL }) {
 
   useEffect(() => { loadSeasons(); }, []);
 
+  // map all seasons in DB onto the table dynamically
+  // CUD doesnt work
   return (
     <div>
       <h2>Seasons</h2>

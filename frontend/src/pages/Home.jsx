@@ -9,6 +9,7 @@ function Home({ backendURL }) {
         }
     }
 
+    // Home page displays title, names, reset button
     return (
         <>
             <h1>NBA Games & Stats Management System</h1>
